@@ -10,7 +10,7 @@
 
   <groupId>com.github.stephenc.scale7</groupId>
   <artifactId>scale7-pelops</artifactId>
-  <version>0.912-0.7.0-rc4-1</version>
+  <version>0.912-1.7.0-rc4-1-SNAPSHOT</version>
   <name>Pelops - A library for accessing the Cassandra database</name>
   <description>
      A library for accessing the Cassandra database.
