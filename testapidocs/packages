@@ -1,0 +1,5 @@
+org.scale7.cassandra.pelops
+org.scale7.cassandra.pelops.exceptions
+org.scale7.cassandra.pelops.spring
+org.scale7.cassandra.pelops.pool
+org.scale7.cassandra.pelops.support
