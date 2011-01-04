@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>ColumnFamilyManager xref</title>
+<link type="text/css" rel="stylesheet" href="../../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../../apidocs/org/scale7/cassandra/pelops/ColumnFamilyManager.html">View Javadoc</a></div><pre>
+
+<a class="jxr_linenumber" name="1" href="#1">1</a>   <strong class="jxr_keyword">package</strong> org.scale7.cassandra.pelops;
+<a class="jxr_linenumber" name="2" href="#2">2</a>   
+<a class="jxr_linenumber" name="3" href="#3">3</a>   <strong class="jxr_keyword">import</strong> org.apache.cassandra.thrift.CfDef;
+<a class="jxr_linenumber" name="4" href="#4">4</a>   <strong class="jxr_keyword">import</strong> org.apache.cassandra.thrift.Cassandra.Client;
+<a class="jxr_linenumber" name="5" href="#5">5</a>   
+<a class="jxr_linenumber" name="6" href="#6">6</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/scale7/cassandra/pelops/ColumnFamilyManager.html">ColumnFamilyManager</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../org/scale7/cassandra/pelops/ManagerOperand.html">ManagerOperand</a> {
+<a class="jxr_linenumber" name="7" href="#7">7</a>   
+<a class="jxr_linenumber" name="8" href="#8">8</a>       <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String CFDEF_TYPE_STANDARD = <span class="jxr_string">"Standard"</span>;
+<a class="jxr_linenumber" name="9" href="#9">9</a>       <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String CFDEF_TYPE_SUPER = <span class="jxr_string">"Super"</span>;
+<a class="jxr_linenumber" name="10" href="#10">10</a>  
+<a class="jxr_linenumber" name="11" href="#11">11</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String CFDEF_COMPARATOR_BYTES = <span class="jxr_string">"BytesType"</span>;
+<a class="jxr_linenumber" name="12" href="#12">12</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String CFDEF_COMPARATOR_ASCII = <span class="jxr_string">"AsciiType"</span>;
+<a class="jxr_linenumber" name="13" href="#13">13</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String CFDEF_COMPARATOR_UTF8 = <span class="jxr_string">"UTF8Type"</span>;
+<a class="jxr_linenumber" name="14" href="#14">14</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String CFDEF_COMPARATOR_LONG = <span class="jxr_string">"LongType"</span>;
+<a class="jxr_linenumber" name="15" href="#15">15</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String CFDEF_COMPARATOR_LEXICAL_UUID = <span class="jxr_string">"LexicalUUIDType"</span>;
+<a class="jxr_linenumber" name="16" href="#16">16</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String CFDEF_COMPARATOR_TIME_UUID = <span class="jxr_string">"TimeUUIDType"</span>;
+<a class="jxr_linenumber" name="17" href="#17">17</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String CFDEF_COMPARATOR_INTEGER = <span class="jxr_string">"IntegerType"</span>;
+<a class="jxr_linenumber" name="18" href="#18">18</a>  
+<a class="jxr_linenumber" name="19" href="#19">19</a>      <strong class="jxr_keyword">public</strong> <a href="../../../../org/scale7/cassandra/pelops/ColumnFamilyManager.html">ColumnFamilyManager</a>(<a href="../../../../org/scale7/cassandra/pelops/Cluster.html">Cluster</a> cluster, String keyspace) {
+<a class="jxr_linenumber" name="20" href="#20">20</a>          <strong class="jxr_keyword">super</strong>(cluster, keyspace);
+<a class="jxr_linenumber" name="21" href="#21">21</a>      }
+<a class="jxr_linenumber" name="22" href="#22">22</a>  
+<a class="jxr_linenumber" name="23" href="#23">23</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> truncateColumnFamily(<strong class="jxr_keyword">final</strong> String columnFamily) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="24" href="#24">24</a>      	IManagerOperation&lt;Void&gt; operation = <strong class="jxr_keyword">new</strong> IManagerOperation&lt;Void&gt;() {
+<a class="jxr_linenumber" name="25" href="#25">25</a>              @Override
+<a class="jxr_linenumber" name="26" href="#26">26</a>              <strong class="jxr_keyword">public</strong> Void execute(Client conn) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="27" href="#27">27</a>                  conn.truncate(columnFamily);
+<a class="jxr_linenumber" name="28" href="#28">28</a>                  <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="29" href="#29">29</a>              }
+<a class="jxr_linenumber" name="30" href="#30">30</a>          };
+<a class="jxr_linenumber" name="31" href="#31">31</a>          tryOperation(operation);
+<a class="jxr_linenumber" name="32" href="#32">32</a>      }
+<a class="jxr_linenumber" name="33" href="#33">33</a>  
+<a class="jxr_linenumber" name="34" href="#34">34</a>      <strong class="jxr_keyword">public</strong> String addColumnFamily(<strong class="jxr_keyword">final</strong> CfDef columnFamilyDefinition) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="35" href="#35">35</a>      	IManagerOperation&lt;String&gt; operation = <strong class="jxr_keyword">new</strong> IManagerOperation&lt;String&gt;() {
+<a class="jxr_linenumber" name="36" href="#36">36</a>              @Override
+<a class="jxr_linenumber" name="37" href="#37">37</a>              <strong class="jxr_keyword">public</strong> String execute(Client conn) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="38" href="#38">38</a>                  <strong class="jxr_keyword">return</strong> conn.system_add_column_family(columnFamilyDefinition);
+<a class="jxr_linenumber" name="39" href="#39">39</a>              }
+<a class="jxr_linenumber" name="40" href="#40">40</a>          };
+<a class="jxr_linenumber" name="41" href="#41">41</a>          <strong class="jxr_keyword">return</strong> tryOperation(operation);
+<a class="jxr_linenumber" name="42" href="#42">42</a>      }
+<a class="jxr_linenumber" name="43" href="#43">43</a>  
+<a class="jxr_linenumber" name="44" href="#44">44</a>      <strong class="jxr_keyword">public</strong> String updateColumnFamily(<strong class="jxr_keyword">final</strong> CfDef columnFamilyDefinition) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="45" href="#45">45</a>      	IManagerOperation&lt;String&gt; operation = <strong class="jxr_keyword">new</strong> IManagerOperation&lt;String&gt;() {
+<a class="jxr_linenumber" name="46" href="#46">46</a>              @Override
+<a class="jxr_linenumber" name="47" href="#47">47</a>              <strong class="jxr_keyword">public</strong> String execute(Client conn) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="48" href="#48">48</a>                  <strong class="jxr_keyword">return</strong> conn.system_update_column_family(columnFamilyDefinition);
+<a class="jxr_linenumber" name="49" href="#49">49</a>              }
+<a class="jxr_linenumber" name="50" href="#50">50</a>          };
+<a class="jxr_linenumber" name="51" href="#51">51</a>          <strong class="jxr_keyword">return</strong> tryOperation(operation);
+<a class="jxr_linenumber" name="52" href="#52">52</a>      }
+<a class="jxr_linenumber" name="53" href="#53">53</a>  
+<a class="jxr_linenumber" name="54" href="#54">54</a>      <strong class="jxr_keyword">public</strong> String dropColumnFamily(<strong class="jxr_keyword">final</strong> String columnFamily) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="55" href="#55">55</a>      	IManagerOperation&lt;String&gt; operation = <strong class="jxr_keyword">new</strong> IManagerOperation&lt;String&gt;() {
+<a class="jxr_linenumber" name="56" href="#56">56</a>              @Override
+<a class="jxr_linenumber" name="57" href="#57">57</a>              <strong class="jxr_keyword">public</strong> String execute(Client conn) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="58" href="#58">58</a>                  <strong class="jxr_keyword">return</strong> conn.system_drop_column_family(columnFamily);
+<a class="jxr_linenumber" name="59" href="#59">59</a>              }
+<a class="jxr_linenumber" name="60" href="#60">60</a>          };
+<a class="jxr_linenumber" name="61" href="#61">61</a>          <strong class="jxr_keyword">return</strong> tryOperation(operation);
+<a class="jxr_linenumber" name="62" href="#62">62</a>      }
+<a class="jxr_linenumber" name="63" href="#63">63</a>  
+<a class="jxr_linenumber" name="64" href="#64">64</a>      <em class="jxr_comment">/*<em class="jxr_comment"> - https://issues.apache.org/jira/browse/CASSANDRA-1630</em></em>
+<a class="jxr_linenumber" name="65" href="#65">65</a>  <em class="jxr_comment">    public String renameColumnFamily(final String oldName, final String newName) throws Exception {</em>
+<a class="jxr_linenumber" name="66" href="#66">66</a>  <em class="jxr_comment">    	IManagerOperation&lt;String&gt; operation = new IManagerOperation&lt;String&gt;() {</em>
+<a class="jxr_linenumber" name="67" href="#67">67</a>  <em class="jxr_comment">            @Override</em>
+<a class="jxr_linenumber" name="68" href="#68">68</a>  <em class="jxr_comment">            public String execute(Client conn) throws Exception {</em>
+<a class="jxr_linenumber" name="69" href="#69">69</a>  <em class="jxr_comment">                return conn.system_rename_column_family(oldName, newName);</em>
+<a class="jxr_linenumber" name="70" href="#70">70</a>  <em class="jxr_comment">            }</em>
+<a class="jxr_linenumber" name="71" href="#71">71</a>  <em class="jxr_comment">        };</em>
+<a class="jxr_linenumber" name="72" href="#72">72</a>  <em class="jxr_comment">        return tryOperation(operation);</em>
+<a class="jxr_linenumber" name="73" href="#73">73</a>  <em class="jxr_comment">    }</em>
+<a class="jxr_linenumber" name="74" href="#74">74</a>  <em class="jxr_comment">    */</em>
+<a class="jxr_linenumber" name="75" href="#75">75</a>  }
+</pre>
+<hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
+</html>
+
