@@ -1,9 +1,0 @@
-CVS
-.project
-.classpath
-.settings
-*.iml
-*.ipr
-*.iws
-/target
-/pom.xml
